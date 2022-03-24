@@ -1,11 +1,11 @@
 
 const mongoose = require('mongoose');
-// const express = require('express');
+const express = require('express');
 
 
-// const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3001;
 
-// const app = express();
+const app = express();
 // dont forget the : between local and the 27017
 mongoose.connect('mongodb://localhost:27017/socialDB')
     .then(async () => {
