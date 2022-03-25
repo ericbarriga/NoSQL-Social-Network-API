@@ -1,52 +1,62 @@
-const { Schema, model } = require('mongoose')
-const { isEmail } = require('validator')
+const { Schema, model } = require("mongoose");
+const { isEmail } = require("validator");
 
-// this is users schema ;
-
-const userSchema = new Schema({
-    username: {
-        type: String,
-        unique: true,
-        minLength: 4,
-        maxLength: 8,
-        trim: true,
-        unique: [true, 'username is already taken'],
-        required: [true, `username is required and must be at least 4 characters long and max 8`]
-    },
-
-    email: {
-        type: String,
-        unique: true,
-        required: true,
-        validate: {
-            // this is matching email to see if they match ;
-            validate: function (value) {
-                return isEmail(value)
-            },
-
-            messages: function (userObject) {
-                return `${userObject.email} in not a valid email address`
-            },
-
+const userSchema = new Schema(
+    {
+        username: {
+            type: String,
+            unique: [true, "Username already taken."],
+            trim: true,
+            required: [true, "Username is required."],
         },
+        email: {
+            type: String,
+            unique: true,
+            required: true,
+            lowercase: true,
+            validate: {
+                validator: function (value) {
+                    return isEmail(value);
+                },
+                message: function (userObject) {
+                    return `${userObject.email} is not a valid email address`;
+                },
+            },
+        },
+
+        thoughts: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "Thought",
+            },
+        ],
+        friends: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "User",
+            },
+        ],
     },
+    {
+        toJSON: {
+            virtuals: true,
+        },
+        id: false,
+    }
+);
 
-    thoughts: [{
-        type: Schema.Types.ObjectId,
-        ref: 'thought'
-    },
-    ],
+// virtual to count friends
+userSchema.virtual("friendCount").get(function () {
+    return this.friends.length;
+});
 
-    friends: [{
-        type: Schema.Types.ObjectId,
-        ref: 'user'
-    },
-    ],
+const User = model("User", userSchema);
 
-    // virtual 
+module.exports = User;
 
+// // Create a virtual property `domain` that's computed from `email`.
+// userSchema.virtual('domain').get(function() {
+//     return this.email.slice(this.email.indexOf('@') + 1);
 
-
-})
-
-const User = model('User', userSchema)
+// // To skip applying virtuals, pass `virtuals: false` to `toJSON()`
+// doc.toJSON({ virtuals: false }).domain; // undefined
