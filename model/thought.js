@@ -1,52 +1,76 @@
-const { Schema, model } = require('mongoose');
-const moment = require('moment');
+const { Schema, model, Types } = require("mongoose");
+const moment = require("moment");
 
-const thoughtSchema = new Schema({
-    thoughtText: {
-        type: String,
-        required: true,
-        minLength: 1,
-        maxLength: 280,
+const reactionSchema = new Schema(
+    {
+        reactionId: {
+            type: Schema.Types.ObjectId,
+            default: () => new Types.ObjectId(),
+        },
+        reactionBody: {
+            type: String,
+            required: true,
+            maxLength: 280,
+        },
+        username: {
+            type: String,
+            required: true,
+        },
+        createdAt: {
+            type: Date,
+            default: Date.now,
+            get: (createdAtVal) =>
+                moment(createdAtVal).format("MMM DD, YYYY [at] hh:mm a"),
+        },
     },
-    createdAt: {
-        type: Date,
-        default: Date.now,
-        get: (createdAt) =>
-            moment(createdAt).format('mm dd yyyy'),
-    },
-
-    username: {
-        type: String,
-        required: true,
-    },
-
-    reactions: [reactionSchema],
-    ///
-    toJSON: {
-        virtual: true,
-        getters: true
-    },
-},
     {
         toJSON: {
-            virtual: true,
             getters: true,
-        }
-    },
-)
-
-const reactionSchema = new Schema({
-    text: {
-        type: String,
-        completed: false,
+        },
+        id: false,
     }
-})
+);
 
-// virtual for replies 
-reactionSchema.virtual('replies').get(function () {
-    return this.replies.length;
-})
+const thoughtSchema = new Schema(
+    {
+        thoughtText: {
+            type: String,
+            minLength: 1,
+            masLength: 280,
+            required: [
+                true,
+                "Thought text is required and must be a min of 1 and max of 280 characters.",
+            ],
+        },
+        createdAt: {
+            type: Date,
+            default: Date.now,
+            get: (createdAtVal) =>
+                moment(createdAtVal).format("MMM DD, YYYY [at] hh:mm a"),
+        },
+        username: {
+            type: String,
+            required: true,
+        },
+        username: {
+            type: String,
+            required: true,
+        },
+        reactions: [reactionSchema],
+    },
+    {
+        toJSON: {
+            virtuals: true,
+            getters: true,
+        },
+        id: false,
+    }
+);
 
-const Thought = model('Thought', thoughtSchema);
+thoughtSchema.virtual("reactionCount").get(function () {
+    return this.reactions.length;
+});
+
+const Thought = model("Thought", thoughtSchema);
 
 module.exports = Thought;

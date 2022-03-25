@@ -19,4 +19,23 @@ module.exports = {
             res.json({ error })
         }
     },
+
+    getAllUsers: async (req, res) => {
+        try {
+            const users = await User.findAll();
+            res.json(users)
+        } catch (error) {
+            res.json(error)
+        }
+    },
+
+    getUserById: async (req, res) => {
+        const { userId } = req.params;
+        try {
+            const user = await User.findById(userId, '-email')
+            res.json(user)
+        } catch (error) {
+            res.json(error)
+        }
+    },
 }

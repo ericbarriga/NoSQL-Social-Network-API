@@ -13,7 +13,8 @@ mongoose.connect('mongodb://localhost:27017/socialDB')
     })
     .catch(err => { console.log(err); })
 
-// app.use(express.json());
-// app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(routes)
 
-// app.listen(PORT, () => console.log('server is uriing '));
+app.listen(PORT, () => console.log('server is uriing '));
