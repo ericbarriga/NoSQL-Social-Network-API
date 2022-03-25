@@ -38,4 +38,35 @@ module.exports = {
             res.json(error)
         }
     },
+
+    deleteUserById: async (req, res) => {
+        const { userId } = req.params;
+        try {
+            const deleteUserById = await User.findByIdAndDelete(userId);
+            res.json(deleteUserById)
+        } catch (error) {
+            res.json(error)
+        }
+    },
+
+    updateUserById: async (req, res) => {
+        const { userId } = req.params;
+        try {
+            const updateUserById = await User.findByIdAndUpdate(
+                userId,
+                { ...req.body },
+                // you are adding this because in mongo db returns the old
+                // id so you have to set it to return the one you updated 
+                {
+                    new: true,
+                    // mongo does'nt add validators when you set to true 
+                    // so you have to re enter them here 
+                    runValidators: true,
+                },
+            )
+            res.json(updateUserById)
+        } catch (error) {
+            res.json(error)
+        }
+    },
 }
