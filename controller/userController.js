@@ -14,6 +14,7 @@ module.exports = {
                 username,
                 email,
             })
+            res.json(newUser)
         } catch (error) {
             res.json({ error })
         }

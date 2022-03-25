@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose');
+const moment = require('moment');
 
 const thoughtSchema = new Schema({
     thoughtText: {
@@ -25,12 +26,26 @@ const thoughtSchema = new Schema({
         virtual: true,
         getters: true
     },
-
-
-
-
 },
+    {
+        toJSON: {
+            virtual: true,
+            getters: true,
+        }
+    },
 )
+
+const reactionSchema = new Schema({
+    text: {
+        type: String,
+        completed: false,
+    }
+})
+
+// virtual for replies 
+reactionSchema.virtual('replies').get(function () {
+    return this.replies.length;
+})
 
 const Thought = model('Thought', thoughtSchema);
 
