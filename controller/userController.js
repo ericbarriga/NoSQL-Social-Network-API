@@ -22,7 +22,8 @@ module.exports = {
 
     getAllUsers: async (req, res) => {
         try {
-            const users = await User.findAll();
+            const users = await User.find();
+            console.log(users)
             res.json(users)
         } catch (error) {
             res.json(error)
