@@ -29,11 +29,13 @@ module.exports = {
             res.json(error)
         }
     },
-
+    //////
     getUserById: async (req, res) => {
-        const { userId } = req.params;
+        const { userID } = req.params;
         try {
-            const user = await User.findById(userId, '-email')
+            // does the user id have to match the userID in the route???
+            const user = await User.findById(userID)
+            console.log(userID);
             res.json(user)
         } catch (error) {
             res.json(error)
@@ -41,9 +43,9 @@ module.exports = {
     },
 
     deleteUserById: async (req, res) => {
-        const { userId } = req.params;
+        const { userID } = req.params;
         try {
-            const deleteUserById = await User.findByIdAndDelete(userId);
+            const deleteUserById = await User.findByIdAndDelete(userID);
             res.json(deleteUserById)
         } catch (error) {
             res.json(error)
@@ -51,10 +53,10 @@ module.exports = {
     },
 
     updateUserById: async (req, res) => {
-        const { userId } = req.params;
+        const { userID } = req.params;
         try {
             const updateUserById = await User.findByIdAndUpdate(
-                userId,
+                userID,
                 { ...req.body },
                 // you are adding this because in mongo db returns the old
                 // id so you have to set it to return the one you updated 
