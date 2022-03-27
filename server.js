@@ -9,6 +9,7 @@ const app = express();
 // dont forget the : between local and the 27017
 mongoose.connect('mongodb://localhost:27017/socialDB')
     .then(async () => {
+
         console.log('made db ');
     })
     .catch(err => { console.log(err); })

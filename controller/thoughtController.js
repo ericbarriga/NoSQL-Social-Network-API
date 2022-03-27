@@ -5,17 +5,22 @@ const { Thought, User } = require('../model');
 module.exports = {
     getAllThots: async (req, res) => {
         try {
-            const thots = await Thought.find()
-            res.json(thots)
+            const thoughts = await Thought.find().populate({
+                path: "username",
+            });
+            // console.log(thoughts);
+            res.json(thoughts);
         } catch (error) {
-            res.json(error)
+            res.json(error);
         }
     },
+
 
     getThotsById: async (req, res) => {
         const { thoughtId } = req.params
         try {
             const thots = await Thought.findById(thoughtId)
+            console.log(thoughtId);
             res.json(thots)
         } catch (error) {
             res.json(error)
@@ -23,11 +28,7 @@ module.exports = {
     },
 
     createThought: async (req, res) => {
-        const {
-            thoughtText,
-            username,
-            userId
-        } = req.body;
+        const { thoughtText, username, userId } = req.body;
         try {
             const newThought = await Thought.create({
                 thoughtText,
@@ -42,7 +43,7 @@ module.exports = {
                     );
                 })
                 .then((thoughtData) => {
-                    //console.log(thoughtData._id);
+                    console.log(thoughtData);
                     res.json(thoughtData);
                 });
         } catch (error) {

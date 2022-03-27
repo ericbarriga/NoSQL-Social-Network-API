@@ -14,6 +14,7 @@ module.exports = {
                 username,
                 email,
             })
+            console.log(newUser)
             res.json(newUser)
         } catch (error) {
             res.json({ error })
@@ -23,7 +24,7 @@ module.exports = {
     getAllUsers: async (req, res) => {
         try {
             const users = await User.find();
-            console.log(users)
+            // console.log(users)
             res.json(users)
         } catch (error) {
             res.json(error)
@@ -35,7 +36,7 @@ module.exports = {
         try {
             // does the user id have to match the userID in the route???
             const user = await User.findById(userID)
-            console.log(userID);
+            // console.log(userID);
             res.json(user)
         } catch (error) {
             res.json(error)
